@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FallSDK · the AI-Native Solutions estate SDK</title>
+<meta name="description" content="One import for the whole estate. Sovereign · P2P · DID · WebRTC · CRDT · mesh. TypeScript typed, ES-module, MIT.">
+<meta name="author" content="AI-Native Solutions">
+<meta name="theme-color" content="#1a1a1e">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%231a1a1e'/%3E%3Ctext x='16' y='22' font-family='serif' font-size='18' fill='%237a9c7e' text-anchor='middle'%3E%E2%97%8A%3C/text%3E%3C/svg%3E">
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+:root{
+  --void:#1a1a1e;--deep:#212127;--surface:#2a2a30;--raised:#33333a;
+  --line:rgba(232,228,219,0.08);--line2:rgba(232,228,219,0.16);
+  --text:#e8e4db;--muted:#928d80;--dim:#6b6660;
+  --sage:#7a9c7e;--sage-dim:rgba(122,156,126,0.14);
+  --amber:#d4a052;--amber-dim:rgba(212,160,82,0.12);
+  --coral:#d67a5a;--coral-glow:rgba(214,122,90,0.15);
+  --serif:'Cormorant Garamond','Iowan Old Style',Georgia,serif;
+  --sans:'Inter',-apple-system,system-ui,sans-serif;
+  --mono:'JetBrains Mono','IBM Plex Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:var(--void);color:var(--text);font-family:var(--sans);font-size:15.5px;line-height:1.65;-webkit-font-smoothing:antialiased;min-height:100vh}
+a{color:var(--sage);text-decoration:none}
+a:hover{color:var(--amber)}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:400;color:var(--text);line-height:1.2}
+h1{font-size:42px;letter-spacing:0.01em;margin-bottom:12px}
+h1 em{color:var(--sage);font-style:italic}
+h2{font-size:28px;margin:32px 0 12px;color:var(--text)}
+h2 em{color:var(--sage);font-style:italic}
+h3{font-size:14px;color:var(--muted);margin:20px 0 8px;text-transform:uppercase;letter-spacing:0.16em;font-family:var(--mono);font-weight:500}
+h4{font-size:20px;margin:18px 0 6px;color:var(--amber)}
+p{margin:8px 0 14px;color:var(--text)}
+p.lede{font-family:var(--serif);font-size:22px;font-style:italic;color:var(--text);max-width:640px}
+p.muted{color:var(--muted)}
+code{font-family:var(--mono);font-size:13px;background:var(--surface);padding:2px 6px;border-radius:4px;color:var(--sage)}
+pre{background:var(--deep);border:1px solid var(--line);border-radius:10px;padding:16px 18px;overflow-x:auto;margin:12px 0 18px;font-family:var(--mono);font-size:13px;line-height:1.6;color:var(--text)}
+pre code{background:transparent;padding:0;color:inherit}
+.app{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
+.side{background:rgba(26,26,30,0.95);backdrop-filter:blur(12px);border-right:1px solid var(--line);padding:22px 20px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-size:24px;color:var(--text);margin-bottom:6px}
+.brand .glyph{color:var(--sage);font-size:24px}
+.brand .co{color:var(--dim);font-family:var(--mono);font-size:9.5px;letter-spacing:0.16em;margin-left:6px;text-transform:uppercase;display:block;margin-top:2px}
+.tag{color:var(--muted);font-family:var(--mono);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:22px;display:block}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav a{padding:7px 10px;border-radius:6px;font-family:var(--mono);font-size:12px;letter-spacing:0.04em;color:var(--muted);border-left:2px solid transparent;transition:all .12s}
+.nav a:hover{color:var(--text);background:var(--sage-dim);border-left-color:var(--sage)}
+.nav a.section{color:var(--dim);font-size:9.5px;text-transform:uppercase;letter-spacing:0.16em;margin-top:14px;padding-left:10px;pointer-events:none}
+main{padding:48px 56px;max-width:960px}
+.hero{border-bottom:1px solid var(--line);padding-bottom:28px;margin-bottom:16px}
+.hero .install{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.hero .install pre{margin:0;flex:1;min-width:280px}
+.badge{display:inline-block;background:var(--sage-dim);color:var(--sage);padding:3px 9px;border-radius:12px;font-family:var(--mono);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;margin-right:6px}
+.badge.amber{background:var(--amber-dim);color:var(--amber)}
+.badge.coral{background:var(--coral-glow);color:var(--coral)}
+.card{background:var(--deep);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin:16px 0}
+.card h4{margin-top:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin:16px 0 24px}
+.grid .card{margin:0}
+.grid .card h4{color:var(--sage);font-family:var(--mono);font-size:14px;font-weight:500;letter-spacing:0.04em}
+.grid .card p{color:var(--muted);font-size:13.5px;margin:6px 0 0}
+.lib{border-top:1px solid var(--line);padding-top:32px;margin-top:32px}
+.lib .head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.lib .head h2{margin:0;color:var(--sage)}
+.lib .head .src{font-family:var(--mono);font-size:11.5px;color:var(--dim);letter-spacing:0.04em}
+.lib .summary{font-family:var(--serif);font-style:italic;font-size:19px;color:var(--text);margin:8px 0 14px}
+.api{margin-top:12px}
+.api table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12.5px}
+.api th{text-align:left;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:0.14em;font-size:10px;padding:6px 10px;border-bottom:1px solid var(--line2)}
+.api td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.api td.name{color:var(--sage);white-space:nowrap}
+.api td.sig{color:var(--text);font-size:12px}
+.api td.desc{color:var(--muted);font-size:12.5px}
+.footer{margin:64px 0 40px;padding-top:24px;border-top:1px solid var(--line);color:var(--dim);font-family:var(--mono);font-size:11px;letter-spacing:0.04em;text-align:center}
+@media (max-width:800px){
+  .app{grid-template-columns:1fr}
+  .side{position:relative;height:auto;border-right:none;border-bottom:1px solid var(--line)}
+  main{padding:32px 22px}
+  h1{font-size:32px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand">
+      <span class="glyph">◊</span> FallSDK
+      <span class="co">ai-native solutions</span>
+    </div>
+    <span class="tag">estate · unified sdk</span>
+    <nav class="nav">
+      <a href="#intro">Intro</a>
+      <a href="#install">Install</a>
+      <a href="#quickstart">Quick start</a>
+      <a href="#load">estate.load()</a>
+      <a href="#healthcheck">healthCheck()</a>
+      <a class="section">libraries</a>
+      <a href="#foldkit">foldkit</a>
+      <a href="#foldshim">foldshim</a>
+      <a href="#fallid">fallid</a>
+      <a href="#falllink">falllink</a>
+      <a href="#fallstore">fallstore</a>
+      <a href="#fallcarrier">fallcarrier</a>
+      <a href="#fallpod">fallpod</a>
+      <a href="#fallsync">fallsync</a>
+      <a href="#falldns">falldns</a>
+      <a href="#falltrust">falltrust</a>
+      <a href="#fallcast">fallcast</a>
+      <a href="#fallmail">fallmail</a>
+      <a href="#fallbridge">fallbridge</a>
+      <a href="#fallhop">fallhop</a>
+      <a class="section">examples</a>
+      <a href="#examples">Example scripts</a>
+      <a href="#license">License</a>
+    </nav>
+  </aside>
+
+  <main>
+    <section id="intro" class="hero">
+      <h1>Fall<em>SDK</em></h1>
+      <p class="lede">One import for the whole AI-Native Solutions estate. Sovereign identity, WebRTC channels, content-addressed storage, CRDT sync, off-grid mesh — every library, typed, tree-shakeable, MIT.</p>
+      <div style="margin-top:14px">
+        <span class="badge">v1.0.0</span>
+        <span class="badge amber">MIT</span>
+        <span class="badge coral">14 libs</span>
+        <span class="badge">ES modules</span>
+        <span class="badge">TypeScript</span>
+      </div>
+      <div class="install">
+        <pre><code>npm install @ai-native-solutions/estate</code></pre>
+        <pre><code>import { load } from 'https://sjgant80-hub.github.io/fallsdk/dist/estate.js'</code></pre>
+      </div>
+    </section>
+
+    <section id="install">
+      <h2>Install <em>anywhere</em></h2>
+      <h3>node / bundler</h3>
+      <pre><code>npm install @ai-native-solutions/estate
+# or
+pnpm add @ai-native-solutions/estate</code></pre>
+      <h3>browser · esm cdn</h3>
+      <pre><code>&lt;script type="module"&gt;
+  import { load } from 'https://sjgant80-hub.github.io/fallsdk/dist/estate.js';
+  const estate = await load();
+  console.log(estate.foldkit.KAPPA);
+&lt;/script&gt;</code></pre>
+      <h3>deno · bun</h3>
+      <pre><code>import { load } from 'npm:@ai-native-solutions/estate';</code></pre>
+    </section>
+
+    <section id="quickstart">
+      <h2>Quick <em>start</em></h2>
+      <p>Three-line sovereign identity + peer channel:</p>
+      <pre><code>import { load } from '@ai-native-solutions/estate';
+
+const estate = await load();
+const me = await estate.fallid.getOrCreate({ label: 'my node' });
+const link = new estate.falllink.FallLink({ did: me.did });
+
+link.on('message', ({ from, data }) =&gt; console.log(from, data));
+await link.broadcast({ hello: 'estate' });</code></pre>
+    </section>
+
+    <section id="load">
+      <h2>estate.<em>load()</em></h2>
+      <p>Fetches every library in parallel and returns a single object. Skip the ones you don't need with <code>only</code>.</p>
+      <pre><code>import { load } from '@ai-native-solutions/estate';
+
+// full estate
+const all = await load();
+
+// subset
+const mini = await load({ only: ['fallid', 'foldkit'] });
+
+// mirror base (e.g. self-hosted)
+const local = await load({ base: 'https://mirror.example.org' });
+
+// custom error handling
+const est = await load({ onError: (name, err) =&gt; log(name, err) });</code></pre>
+
+      <div class="api">
+        <table>
+          <tr><th>option</th><th>type</th><th>default</th><th>notes</th></tr>
+          <tr><td class="name">base</td><td class="sig">string</td><td class="desc">https://sjgant80-hub.github.io</td><td class="desc">Base URL for module imports</td></tr>
+          <tr><td class="name">only</td><td class="sig">LibraryName[]</td><td class="desc">all 14</td><td class="desc">Load only these libraries</td></tr>
+          <tr><td class="name">onError</td><td class="sig">(name,err)=&gt;void</td><td class="desc">console.warn</td><td class="desc">Handler for per-library load failures</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <section id="healthcheck">
+      <h2>health<em>Check()</em></h2>
+      <p>HEAD every library and report status. Useful for a status page or CI probe.</p>
+      <pre><code>import { healthCheck } from '@ai-native-solutions/estate';
+const report = await healthCheck();
+// [{ name:'foldkit', url:'…', ok:true, status:200 }, …]</code></pre>
+    </section>
+
+    <div class="grid" style="margin-top:36px">
+      <div class="card"><h4>◊ sovereign</h4><p>No servers required. Every library runs on the user's device.</p></div>
+      <div class="card"><h4>◊ tree-shakeable</h4><p>Import one library or all fourteen. Bundle only what you use.</p></div>
+      <div class="card"><h4>◊ typed</h4><p>Full <code>.d.ts</code> coverage for every public API.</p></div>
+      <div class="card"><h4>◊ mit</h4><p>Do whatever. Attribution appreciated, not required.</p></div>
+    </div>
+
+    <h2 style="margin-top:56px">The <em>libraries</em></h2>
+
+    <section id="foldkit" class="lib">
+      <div class="head"><h2>foldkit</h2><span class="src">foldkit/foldkit.js</span></div>
+      <p class="summary">Fold arithmetic, SPINE, KAPPA/OMEGA constants, six OPS, Konomi band classifier.</p>
+      <pre><code>import { foldkit } from '@ai-native-solutions/estate';
+const band = foldkit.classifyKappaBand('the signal survives the fall');
+const probe = foldkit.probeFromKappa(band.min, 'hello');</code></pre>
+      <div class="api"><table>
+        <tr><th>export</th><th>signature</th></tr>
+        <tr><td class="name">SPINE, PHI, KAPPA, OMEGA, BASELINE</td><td class="sig">constants</td></tr>
+        <tr><td class="name">foldNumber</td><td class="sig">(S:number[]) =&gt; number</td></tr>
+        <tr><td class="name">stateSum, stateSignature</td><td class="sig">(S:number[]) =&gt; number|string</td></tr>
+        <tr><td class="name">depthBand, isOrphanZone</td><td class="sig">(kappa:number) =&gt; KappaBand|boolean</td></tr>
+        <tr><td class="name">OPS.{fire,water,void,thunder,echo,flower}</td><td class="sig">operators over state arrays</td></tr>
+        <tr><td class="name">classifyKappaBand</td><td class="sig">(text:string) =&gt; KappaBand</td></tr>
+        <tr><td class="name">probeFromKappa</td><td class="sig">(kappa:number, text?:string) =&gt; { band, op, probe }</td></tr>
+        <tr><td class="name">signalSurvival, unclogGain, attenuationProfile</td><td class="sig">signal propagation math</td></tr>
+        <tr><td class="name">kawasakiSum, kawasakiFlat, maekawaValid</td><td class="sig">origami validity checks</td></tr>
+      </table></div>
+    </section>
+
+    <section id="foldshim" class="lib">
+      <div class="head"><h2>foldshim</h2><span class="src">foldkit/foldshim.js</span></div>
+      <p class="summary">Shape adapters — feed legacy state shapes into foldkit without hand-rolling conversion.</p>
+      <pre><code>import { foldshim } from '@ai-native-solutions/estate';
+const { S } = foldshim.adopt(rawObject, { recipe: 'spine7' });</code></pre>
+      <div class="api"><table>
+        <tr><th>export</th><th>signature</th></tr>
+        <tr><td class="name">adopt</td><td class="sig">(input, opts?) =&gt; { S, from, ok, notes? }</td></tr>
+        <tr><td class="name">RECIPES</td><td class="sig">spine7 | ringOf7 | fromObject | fromString | fromArray | fromKappa</td></tr>
+        <tr><td class="name">detectShape</td><td class="sig">(input) =&gt; string</td></tr>
+        <tr><td class="name">normalize</td><td class="sig">(S:number[]) =&gt; number[]</td></tr>
+      </table></div>
+    </section>
+
+    <section id="fallid" class="lib">
+      <div class="head"><h2>fallid</h2><span class="src">fallid/fallid.js</span></div>
+      <p class="summary">Sovereign identity — Ed25519 keypair in IndexedDB, DID strings, sign & verify.</p>
+      <pre><code>import { fallid } from '@ai-native-solutions/estate';
+const me  = await fallid.getOrCreate({ label: 'my node' });
+const sig = await fallid.sign('hello', me);
+const ok  = await fallid.verify('hello', sig, me.publicKey);</code></pre>
+      <div class="api"><table>
+        <tr><th>export</th><th>signature</th></tr>
+        <tr><td class="name">getOrCreate, create</td><td class="sig">(opts?) =&gt; Promise&lt;FallIdentity&gt;</td></tr>
+        <tr><td class="name">load, listAll, remove</td><td class="sig">identity persistence</td></tr>
+        <tr><td class="name">sign</td><td class="sig">(payload, identity?) =&gt; Promise&lt;Signature&gt;</td></tr>
+        <tr><td class="name">verify</td><td class="sig">(payload, sig, publicKey?) =&gt; Promise&lt;boolean&gt;</td></tr>
+        <tr><td class="name">DID, pubFromDID</td><td class="sig">DID string encode/decode</td></tr>
+        <tr><td class="name">exportIdentity, importIdentity</td><td class="sig">portable JSON</td></tr>
+      </table></div>
+    </section>
+
+    <section id="falllink" class="lib">
+      <div class="head"><h2>falllink</h2><span class="src">falllink/falllink.js</span></div>
+      <p class="summary">WebRTC peer channel with optional signaling. Broadcast, direct, event-driven.</p>
+      <pre><code>const link = new falllink.FallLink({ did: me.did });
+link.on('message', ({ from, data }) =&gt; console.log(from, data));
+await link.broadcast({ hi: 'peers' });</code></pre>
+      <div class="api"><table>
+        <tr><th>export</th><th>signature</th></tr>
+        <tr><td class="name">class FallLink</td><td class="sig">new FallLink(opts?)</td></tr>
+        <tr><td class="name">.connect, .send, .broadcast, .disconnect, .close</td><td class="sig">channel ops</td></tr>
+        <tr><td class="name">.on, .off, .once</td><td class="sig">events: open close message peer error signal</td></tr>
+        <tr><td class="name">createLink</td><td class="sig">factory helper</td></tr>
+      </table></div>
+    </section>
+
+    <section id="fallstore" class="lib">
+      <div class="head"><h2>fallstore</h2><span class="src">fallstore/fallstore.js</span></div>
+      <p class="summary">Content-addressed storage — hash-derived CIDs, IndexedDB backend.</p>
+      <pre><code>const rec = await fallstore.store('hello', { mime: 'text/plain' });
+const back = await fallstore.retrieveText(rec.cid);</code></pre>
+      <div class="api"><table>
+        <tr><th>export</th><th>signature</th></tr>
+        <tr><td class="name">store</td><td class="sig">(data, opts?) =&gt; Promise&lt;StoreRecord&gt;</td></tr>
+        <tr><td class="name">retrieve, retrieveText, retrieveJson</td><td class="sig">by CID</td></tr>
+        <tr><td class="name">has, remove, verify</td><td class="sig">CID ops</td></tr>
+        <tr><td class="name">list, stats</td><td class="sig">enumerate</td></tr>
+        <tr><td class="name">CID</td><td class="sig">(data) =&gt; Promise&lt;string&gt;</td></tr>
+      </table></div>
+    </section>
+
+    <section id="fallcarrier" class="lib">
+      <div class="head"><h2>fallcarrier</h2><span class="src">fallcarrier/fallcarrier.js</span></div>
+      <p class="summary">Transport router — picks the best available channel (WebRTC / BLE / relay / local).</p>
+      <pre><code>const car = fallcarrier.createCarrier({ transports: ['webrtc','ble'] });
+await car.send(peerDID, payload);</code></pre>
+      <div class="api"><table>
+        <tr><th>export</th><th>signature</th></tr>
+        <tr><td class="name">class FallCarrier</td><td class="sig">.register .route .send .on .close</td></tr>
+        <tr><td class="name">createCarrier</td><td class="sig">(opts?) =&gt; FallCarrier</td></tr>
+        <tr><td class="name">pickTransport</td><td class="sig">(available, destination?) =&gt; TransportKind</td></tr>
+      </table></div>
+    </section>
+
+    <section id="fallpod" class="lib">
+      <div class="head"><h2>fallpod</h2><span class="src">fallpod/fallpod.js</span></div>
+      <p class="summary">Solid-style personal data pod. User-owned records, grant/revoke access by DID.</p>
+      <pre><code>const pod = await fallpod.openPod();
+await pod.put('/notes/first', { text: 'hi' });
+await pod.grant('/notes/first', friendDID, 'read');</code></pre>
+      <div class="api"><table>
+        <tr><th>export</th><th>signature</th></tr>
+        <tr><td class="name">class FallPod</td><td class="sig">.put .get .del .list .grant .revoke</td></tr>
+        <tr><td class="name">openPod</td><td class="sig">(opts?) =&gt; Promise&lt;FallPod&gt;</td></tr>
+      </table></div>
+    </section>
+
+    <section id="fallsync" class="lib">
+      <div class="head"><h2>fallsync</h2><span class="src">fallsync/fallsync.js</span></div>
+      <p class="summary">CRDT sync — LWW, GCounter, ORSet, RGA, Automerge-flavour. Merge concurrent edits.</p>
+      <pre><code>const doc = fallsync.create('doc-1', 'lww', { title: '' });
+const changed = fallsync.apply(doc, { path:['title'], value:'hello' });</code></pre>
+      <div class="api"><table>
+        <tr><th>export</th><th>signature</th></tr>
+        <tr><td class="name">create, apply, merge, diff, encode, decode</td><td class="sig">pure CRDT ops</td></tr>
+        <tr><td class="name">class SyncSession</td><td class="sig">.push .pull .on</td></tr>
+      </table></div>
+    </section>
+
+    <section id="falldns" class="lib">
+      <div class="head"><h2>falldns</h2><span class="src">falldns/falldns.js</span></div>
+      <p class="summary">Sovereign name resolution. Name → DID, no ICANN root.</p>
+      <pre><code>const rec = await falldns.resolve('simon.fall');
+await falldns.register('me.fall', me.did);</code></pre>
+      <div class="api"><table>
+        <tr><th>export</th><th>signature</th></tr>
+        <tr><td class="name">resolve, reverse, register, release, list, verifyRecord</td><td class="sig">record CRUD + lookup</td></tr>
+        <tr><td class="name">ROOT_ZONE</td><td class="sig">string</td></tr>
+      </table></div>
+    </section>
+
+    <section id="falltrust" class="lib">
+      <div class="head"><h2>falltrust</h2><span class="src">falltrust/falltrust.js</span></div>
+      <p class="summary">Web-of-trust — DID attestations, scored graph queries.</p>
+      <pre><code>await falltrust.attest(me.did, friend.did, 'vouch', { weight: 0.8 });
+const score = await falltrust.trustScore(me.did, stranger.did);</code></pre>
+      <div class="api"><table>
+        <tr><th>export</th><th>signature</th></tr>
+        <tr><td class="name">attest, revoke</td><td class="sig">attestation CRUD</td></tr>
+        <tr><td class="name">attestationsFor, attestationsBy</td><td class="sig">lookup</td></tr>
+        <tr><td class="name">trustScore, findPath, neighbors</td><td class="sig">graph queries</td></tr>
+      </table></div>
+    </section>
+
+    <section id="fallcast" class="lib">
+      <div class="head"><h2>fallcast</h2><span class="src">fallcast/fallcast.js</span></div>
+      <p class="summary">Federated broadcast — pub/sub over the mesh, signed by DID.</p>
+      <pre><code>const cast = fallcast.createCast({ did: me.did });
+cast.subscribe('news', m =&gt; render(m));
+await cast.publish('news', { headline: 'estate live' });</code></pre>
+      <div class="api"><table>
+        <tr><th>export</th><th>signature</th></tr>
+        <tr><td class="name">class FallCast</td><td class="sig">.publish .subscribe .unsubscribe .topics .peers</td></tr>
+        <tr><td class="name">createCast</td><td class="sig">(opts?) =&gt; FallCast</td></tr>
+      </table></div>
+    </section>
+
+    <section id="fallmail" class="lib">
+      <div class="head"><h2>fallmail</h2><span class="src">fallmail/fallmail.js</span></div>
+      <p class="summary">End-to-end encrypted mail, addressed by DID. Offline queueable.</p>
+      <pre><code>const mail = await fallmail.openMail({ did: me.did });
+await mail.send(friend.did, 'hey', 'hello over sovereign mail');</code></pre>
+      <div class="api"><table>
+        <tr><th>export</th><th>signature</th></tr>
+        <tr><td class="name">class FallMail</td><td class="sig">.send .inbox .outbox .read .markRead .delete .on</td></tr>
+        <tr><td class="name">openMail</td><td class="sig">(opts?) =&gt; Promise&lt;FallMail&gt;</td></tr>
+      </table></div>
+    </section>
+
+    <section id="fallbridge" class="lib">
+      <div class="head"><h2>fallbridge</h2><span class="src">fallbridge/fallbridge.js</span></div>
+      <p class="summary">BLE dongle bridge — off-grid short-range mesh.</p>
+      <pre><code>const br = fallbridge.createBridge();
+const devs = await br.scan();
+await br.connect(devs[0].id);
+await br.send(payload);</code></pre>
+      <div class="api"><table>
+        <tr><th>export</th><th>signature</th></tr>
+        <tr><td class="name">class FallBridge</td><td class="sig">.scan .connect .disconnect .send .on</td></tr>
+        <tr><td class="name">createBridge, isSupported</td><td class="sig">factory + capability probe</td></tr>
+      </table></div>
+    </section>
+
+    <section id="fallhop" class="lib">
+      <div class="head"><h2>fallhop</h2><span class="src">fallhop/fallhop.js</span></div>
+      <p class="summary">Bitchat ↔ Konomi translator — cross-mesh compatibility.</p>
+      <pre><code>const hop = fallhop.createHop({ did: me.did });
+hop.onBitchat(frame =&gt; console.log(fallhop.bitchatToKonomi(frame)));</code></pre>
+      <div class="api"><table>
+        <tr><th>export</th><th>signature</th></tr>
+        <tr><td class="name">bitchatToKonomi, konomiToBitchat</td><td class="sig">pure frame translators</td></tr>
+        <tr><td class="name">class FallHop</td><td class="sig">.onBitchat .onKonomi .emitBitchat .emitKonomi .close</td></tr>
+        <tr><td class="name">createHop</td><td class="sig">(opts?) =&gt; FallHop</td></tr>
+      </table></div>
+    </section>
+
+    <section id="examples" style="margin-top:56px">
+      <h2>Example <em>scripts</em></h2>
+      <p>Small end-to-end demos in the <a href="https://github.com/sjgant80-hub/fallsdk/tree/main/examples"><code>examples/</code></a> folder.</p>
+      <div class="grid">
+        <div class="card"><h4>hello-world.js</h4><p>Create an identity + open a FallLink channel.</p></div>
+        <div class="card"><h4>send-message.js</h4><p>FallID + FallMail — signed E2E mail.</p></div>
+        <div class="card"><h4>konomi-classifier.js</h4><p>foldkit.classifyKappaBand on live text.</p></div>
+        <div class="card"><h4>mesh-connect.js</h4><p>Set up FallCarrier with WebRTC + BLE fallbacks.</p></div>
+        <div class="card"><h4>store-and-cast.js</h4><p>Store content, publish CID via FallCast.</p></div>
+        <div class="card"><h4>trust-graph.js</h4><p>Attest, query trustScore.</p></div>
+      </div>
+    </section>
+
+    <section id="license">
+      <h2>License &amp; <em>lineage</em></h2>
+      <p>MIT. Fork, remix, mint. FallSDK is Gen-1 estate — Simon Gant's build, released for the guild and the wider commons. Each wrapped library is its own repo with its own MIT license under <a href="https://github.com/sjgant80-hub">sjgant80-hub</a>.</p>
+      <p class="muted">SDK version <code>1.0.0</code> · wraps <strong>14</strong> estate libraries · pure ES modules · no runtime deps.</p>
+    </section>
+
+    <div class="footer">
+      ◊ AI-Native Solutions · ai-nativesolutions.com · MIT
+    </div>
+  </main>
+</div>
+</body>
+</html>
