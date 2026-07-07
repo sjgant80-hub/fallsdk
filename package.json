@@ -1,104 +1,24 @@
 {
-  "name": "@ai-native-solutions/estate",
+  "name": "@ai-native-solutions/fallsdk",
   "version": "1.0.0",
   "type": "module",
-  "description": "The complete AI-Native Solutions estate SDK — sovereign, P2P, DID, WebRTC, CRDT, mesh. One import for the whole estate.",
-  "main": "./dist/estate.js",
-  "types": "./dist/estate.d.ts",
+  "description": "Central estate SDK · one import for every AI-Native Solutions tool · registry-based",
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
   "exports": {
-    ".": {
-      "types": "./dist/estate.d.ts",
-      "import": "./dist/estate.js"
-    },
-    "./foldkit": {
-      "types": "./types/foldkit.d.ts",
-      "import": "./dist/foldkit.js"
-    },
-    "./foldshim": {
-      "types": "./types/foldshim.d.ts",
-      "import": "./dist/foldshim.js"
-    },
-    "./fallid": {
-      "types": "./types/fallid.d.ts",
-      "import": "./dist/fallid.js"
-    },
-    "./falllink": {
-      "types": "./types/falllink.d.ts",
-      "import": "./dist/falllink.js"
-    },
-    "./fallstore": {
-      "types": "./types/fallstore.d.ts",
-      "import": "./dist/fallstore.js"
-    },
-    "./fallcarrier": {
-      "types": "./types/fallcarrier.d.ts",
-      "import": "./dist/fallcarrier.js"
-    },
-    "./fallpod": {
-      "types": "./types/fallpod.d.ts",
-      "import": "./dist/fallpod.js"
-    },
-    "./fallsync": {
-      "types": "./types/fallsync.d.ts",
-      "import": "./dist/fallsync.js"
-    },
-    "./falldns": {
-      "types": "./types/falldns.d.ts",
-      "import": "./dist/falldns.js"
-    },
-    "./falltrust": {
-      "types": "./types/falltrust.d.ts",
-      "import": "./dist/falltrust.js"
-    },
-    "./fallcast": {
-      "types": "./types/fallcast.d.ts",
-      "import": "./dist/fallcast.js"
-    },
-    "./fallmail": {
-      "types": "./types/fallmail.d.ts",
-      "import": "./dist/fallmail.js"
-    },
-    "./fallbridge": {
-      "types": "./types/fallbridge.d.ts",
-      "import": "./dist/fallbridge.js"
-    },
-    "./fallhop": {
-      "types": "./types/fallhop.d.ts",
-      "import": "./dist/fallhop.js"
-    }
+    ".": { "types": "./src/index.d.ts", "import": "./src/index.js" },
+    "./foldkit": "./src/foldkit.js",
+    "./registry": "./src/registry.js"
   },
-  "files": [
-    "dist",
-    "types",
-    "src",
-    "README.md",
-    "LICENSE"
-  ],
-  "keywords": [
-    "sovereign",
-    "estate",
-    "P2P",
-    "did",
-    "webrtc",
-    "crdt",
-    "mesh",
-    "ai-native",
-    "konomi",
-    "foldkit",
-    "falllink"
-  ],
-  "author": "AI-Native Solutions <sjgant80@gmail.com>",
+  "files": ["src/", "dist/", "docs/", "README.md", "LICENSE"],
+  "dependencies": {
+    "@ai-native-solutions/foldkit-sdk": "^1.0.0"
+  },
+  "peerDependencies": {},
+  "optionalDependencies": {},
+  "keywords": ["sovereign", "estate", "sdk", "meta", "ai-native"],
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "github:sjgant80-hub/fallsdk"
-  },
+  "repository": { "type": "git", "url": "https://github.com/sjgant80-hub/fallsdk.git" },
   "homepage": "https://sjgant80-hub.github.io/fallsdk/",
-  "bugs": {
-    "url": "https://github.com/sjgant80-hub/fallsdk/issues"
-  },
-  "engines": {
-    "node": ">=18"
-  },
-  "sideEffects": false
+  "publishConfig": { "access": "public" }
 }

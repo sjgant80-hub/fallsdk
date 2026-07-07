@@ -1,157 +1,114 @@
-# FallSDK · `@ai-native-solutions/estate`
+# FallSDK
 
-**One import for the whole AI-Native Solutions estate.**
+**One import for every tool in the AI-Native Solutions estate.**
 
-Sovereign identity, WebRTC peer channels, content-addressed storage, CRDT sync, off-grid mesh — every estate library unified behind a single npm package with full TypeScript types.
-
-- **Docs:** <https://sjgant80-hub.github.io/fallsdk/>
-- **Source:** <https://github.com/sjgant80-hub/fallsdk>
-- **License:** MIT
-
----
-
-## Install
-
-### npm / pnpm / bun
+FallSDK is the central meta-package. If you want to build on top of the estate — from JavaScript, TypeScript, Node, Deno, Bun, or a browser via CDN — this is the single entry-point you install.
 
 ```bash
-npm install @ai-native-solutions/estate
+npm install @ai-native-solutions/fallsdk
 ```
 
-### Browser (ESM CDN — no build step)
+```js
+import { foldkit } from '@ai-native-solutions/fallsdk';
+
+console.log(foldkit.SPINE);        // [2, 3, 5, 7, 11, 13, 17]
+console.log(foldkit.foldNumber([1,1,0,1,0,0,0]));
+```
+
+Or via CDN:
 
 ```html
 <script type="module">
-  import { load } from 'https://sjgant80-hub.github.io/fallsdk/dist/estate.js';
-  const estate = await load();
-  console.log('KAPPA =', estate.foldkit.KAPPA);
+  import fallsdk from 'https://esm.sh/@ai-native-solutions/fallsdk';
+  const modules = await fallsdk.load();
+  console.log(modules);
 </script>
 ```
 
-### Deno
+## Why one meta-package
 
-```ts
-import { load } from 'npm:@ai-native-solutions/estate';
-```
+The estate is dozens of small, focused, MIT-licensed tools — each with its own repo, its own website, and increasingly its own companion `-sdk` package. If you want three of them you shouldn't have to hunt down three npm names, three CDN URLs, and three README pages. FallSDK is the doorway.
 
----
+- **Static re-exports** — companions that already exist on npm are re-exported by name, so tree-shakers see individual functions and bundle only what you use.
+- **Dynamic registry** — companions that are still being generated appear in `registry.json` and can be loaded at runtime via `load()`. As `fall-sdk-generator` publishes more repos, the registry grows and everything is instantly reachable.
+- **Estate discovery** — `discoverEstate()` pulls the [FallHarbor](https://sjgant80-hub.github.io/fallharbor/) manifest so you can list every tool in the estate, not just the ones with SDKs yet.
 
-## Quick start
+## What's shipping today
 
-```js
-import { load } from '@ai-native-solutions/estate';
+Only **[foldkit-sdk](https://sjgant80-hub.github.io/foldkit-sdk/)** is available as a standalone published SDK right now. It's the origami-mathematics substrate that everything else is built on: SPINE primes, kappa bands, six fold operations, Kawasaki and Maekawa validators. FallSDK re-exports it verbatim as `foldkit`.
 
-const estate = await load();
+Every other tool in the estate is still an HTML app or a raw library. `fall-sdk-generator` runs in-browser (WebLLM) and produces `-sdk` companion repos for the rest. As each one lands it's added to `registry.json` — no change needed on your side beyond a version bump.
 
-// sovereign identity — Ed25519, persisted to IndexedDB
-const me = await estate.fallid.getOrCreate({ label: 'my node' });
+## API
 
-// open a WebRTC peer channel bound to that DID
-const link = new estate.falllink.FallLink({ did: me.did });
-link.on('message', ({ from, data }) => console.log(from, data));
-await link.broadcast({ hello: 'estate' });
-```
-
-Or tree-shake:
+### Static
 
 ```js
-import { fallid, foldkit } from '@ai-native-solutions/estate';
-const band = await foldkit.classifyKappaBand('the signal survives the fall');
+import { foldkit } from '@ai-native-solutions/fallsdk';
 ```
 
----
+Re-exports the full [foldkit-sdk](https://sjgant80-hub.github.io/foldkit-sdk/) namespace. See its docs for the full surface.
 
-## What's inside
-
-Fourteen libraries, all shipped, all MIT, all served from GitHub Pages:
-
-| Library      | Summary                                                       |
-|--------------|---------------------------------------------------------------|
-| `foldkit`    | Fold arithmetic · SPINE · KAPPA · OMEGA · OPS · band classifier |
-| `foldshim`   | Shape adapters — `adopt()` + `RECIPES` for legacy state shapes |
-| `fallid`     | Sovereign identity · Ed25519 DID · sign · verify              |
-| `falllink`   | WebRTC peer channel · `FallLink` class · signaling optional   |
-| `fallstore`  | Content-addressed storage · store · retrieve · verify · CID   |
-| `fallcarrier`| Transport routing · WebRTC / BLE / relay picker               |
-| `fallpod`    | Solid-style personal data pod · user-owned records            |
-| `fallsync`   | CRDT sync · merge concurrent edits without a server           |
-| `falldns`    | Sovereign name resolution · name → DID · no ICANN root        |
-| `falltrust`  | Web-of-trust · attestations · graph queries                   |
-| `fallcast`   | Federated broadcast · publish / subscribe over the mesh       |
-| `fallmail`   | E2E encrypted mail · DID-addressed · offline queueable        |
-| `fallbridge` | BLE dongle bridge · off-grid short-range mesh                 |
-| `fallhop`    | Bitchat ↔ Konomi translator · cross-mesh compatibility        |
-
-Full API tables + code samples in the [docs site](https://sjgant80-hub.github.io/fallsdk/).
-
----
-
-## Core API
-
-### `load(opts?) → Promise<Estate>`
-
-Fetches every library in parallel and returns one object.
+### Registry
 
 ```js
-const all  = await load();                                    // full estate
-const mini = await load({ only: ['fallid', 'foldkit'] });     // subset
-const alt  = await load({ base: 'https://mirror.example' });  // custom origin
+import { getRegistry, listSDKs } from '@ai-native-solutions/fallsdk';
+
+const registry = await getRegistry();
+// { version, generated, sdks: { foldkit: '...' }, mcps: {...} }
 ```
 
-### `loadOne(name, opts?) → Promise<Module>`
-
-Load a single library on demand.
-
-### `healthCheck(opts?) → Promise<Report[]>`
-
-HEAD every library and report status — useful for a status page or CI probe.
-
-### Lazy namespace re-exports
+### Dynamic load
 
 ```js
-import { foldkit, fallid } from '@ai-native-solutions/estate';
+import { load, loadOne } from '@ai-native-solutions/fallsdk';
+
+const all = await load();          // { foldkit: Module, ... }
+const fk  = await loadOne('foldkit');
 ```
 
-Each namespace is a proxy that dynamic-imports on first access — you pay the fetch cost only for what you touch.
+Load pulls the current registry, dynamic-imports every listed entry-point, and collects the results. Failed imports are captured as `{ __error: '...' }` rather than throwing — the estate degrades gracefully.
 
----
+### Estate discovery
 
-## Examples
+```js
+import { discoverEstate, listTools, listMCPs } from '@ai-native-solutions/fallsdk';
 
-See [`examples/`](./examples/):
-
-- `hello-world.js` — identity + peer channel
-- `send-message.js` — signed E2E mail
-- `konomi-classifier.js` — KAPPA band classification
-- `mesh-connect.js` — carrier + WebRTC + BLE
-- `store-and-cast.js` — CID storage + pub/sub
-- `trust-graph.js` — web-of-trust queries
-
----
-
-## TypeScript
-
-Full `.d.ts` coverage in [`types/`](./types/). Each library ships its own declaration file with typed exports, interfaces, and function signatures. Subpath imports are typed too:
-
-```ts
-import type { KappaBand, OpMeta } from '@ai-native-solutions/estate/foldkit';
-import type { FallIdentity, Signature } from '@ai-native-solutions/estate/fallid';
+const harbor = await discoverEstate();   // full FallHarbor manifest
+const tools  = await listTools();        // flat array of tool entries
+const mcps   = await listMCPs();         // { name -> repo } for MCPs
 ```
 
----
+## Adding a new -sdk to the registry
 
-## Design principles
+When `fall-sdk-generator` (or a human) publishes a new `<name>-sdk` repo:
 
-- **Sovereign** — nothing calls home. Every library runs on the user's device.
-- **Tree-shakeable** — import one library or all fourteen. Bundle only what you use.
-- **No runtime deps** — pure ES modules, browser-first.
-- **Typed** — full `.d.ts` coverage of every public API.
-- **MIT** — do whatever. Fork, remix, mint provenance NFTs.
+1. Ensure the repo publishes ESM at `https://sjgant80-hub.github.io/<name>-sdk/src/index.js`.
+2. Edit `registry.json` in this repo and add an entry under `sdks`:
+   ```json
+   "sdks": {
+     "foldkit": {
+       "cdn": "https://sjgant80-hub.github.io/foldkit-sdk/src/index.js",
+       "npm": "@ai-native-solutions/foldkit-sdk",
+       "types": "https://sjgant80-hub.github.io/foldkit-sdk/src/index.d.ts",
+       "repo": "sjgant80-hub/foldkit-sdk"
+     },
+     "yournew": {
+       "cdn": "https://sjgant80-hub.github.io/yournew-sdk/src/index.js",
+       "npm": "@ai-native-solutions/yournew-sdk",
+       "repo": "sjgant80-hub/yournew-sdk"
+     }
+   }
+   ```
+3. Commit and push. GitHub Pages redeploys within a minute. Every consumer of `load()` now sees the new SDK on their next call.
+4. Optionally add a static re-export to `src/index.js` so it appears in the tree-shakeable namespace as well, then bump `package.json` version.
 
----
+## License
 
-## Lineage
+MIT · Copyright (c) 2026 AI-Native Solutions
 
-FallSDK is Gen-1 estate — Simon Gant's build, released for the guild (Gen-2) and the wider commons (Gen-3+). Each wrapped library is its own repo under [`sjgant80-hub`](https://github.com/sjgant80-hub), independently MIT-licensed.
+## Links
 
-Part of the [AI-Native Solutions](https://ai-nativesolutions.com) estate.
+- [foldkit-sdk](https://sjgant80-hub.github.io/foldkit-sdk/) — the substrate SDK
+- [FallHarbor](https://sjgant80-hub.github.io/fallharbor/) — the estate directory
+- [ai-nativesolutions.com](https://ai-nativesolutions.com)

@@ -1,0 +1,36 @@
+{
+  "version": "1.0.0",
+  "generated": "2026-07-07",
+  "sdks": {
+    "foldkit": {
+      "cdn": "https://sjgant80-hub.github.io/foldkit-sdk/src/index.js",
+      "npm": "@ai-native-solutions/foldkit-sdk",
+      "types": "https://sjgant80-hub.github.io/foldkit-sdk/src/index.d.ts",
+      "repo": "sjgant80-hub/foldkit-sdk"
+    },
+    "groundlevel": {
+      "cdn": "https://raw.githubusercontent.com/sjgant80-hub/groundlevel-sdk/main/src/index.js",
+      "npm": "@ai-native-solutions/groundlevel-sdk",
+      "repo": "sjgant80-hub/groundlevel-sdk"
+    },
+    "trilogy": {
+      "cdn": "https://raw.githubusercontent.com/sjgant80-hub/trilogy-sdk/main/src/index.js",
+      "npm": "@ai-native-solutions/trilogy-sdk",
+      "repo": "sjgant80-hub/trilogy-sdk"
+    }
+  },
+  "mcps": {
+    "foldkit": { "repo": "sjgant80-hub/foldkit-mcp", "npm": "@ai-native-solutions/foldkit-mcp" },
+    "fallcore": { "repo": "sjgant80-hub/fallcore-mcp", "npm": "@ai-native-solutions/fallcore-mcp" },
+    "groundlevel": { "repo": "sjgant80-hub/groundlevel-mcp", "npm": "@ai-native-solutions/groundlevel-mcp" },
+    "operator": { "repo": "sjgant80-hub/operator-mcp", "npm": "@ai-native-solutions/operator-mcp" }
+  },
+  "apis": {
+    "fallcube": { "repo": "sjgant80-hub/fallcube-api" },
+    "trilogy-forge": { "repo": "sjgant80-hub/trilogy-forge-api" },
+    "docmind": { "repo": "sjgant80-hub/docmind-api" },
+    "deep": { "repo": "sjgant80-hub/deep-api" },
+    "flux": { "repo": "sjgant80-hub/flux-api" }
+  },
+  "expected_growth": "populated by fall-sdk-generator + fall-kit cascade batch runs"
+}

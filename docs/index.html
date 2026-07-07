@@ -129,31 +129,31 @@ main{padding:48px 56px;max-width:960px}
         <span class="badge">TypeScript</span>
       </div>
       <div class="install">
-        <pre><code>npm install @ai-native-solutions/estate</code></pre>
-        <pre><code>import { load } from 'https://sjgant80-hub.github.io/fallsdk/dist/estate.js'</code></pre>
+        <pre><code>npm install @ai-native-solutions/fallsdk</code></pre>
+        <pre><code>import { load } from 'https://sjgant80-hub.github.io/fallsdk/src/index.js'</code></pre>
       </div>
     </section>
 
     <section id="install">
       <h2>Install <em>anywhere</em></h2>
       <h3>node / bundler</h3>
-      <pre><code>npm install @ai-native-solutions/estate
+      <pre><code>npm install @ai-native-solutions/fallsdk
 # or
-pnpm add @ai-native-solutions/estate</code></pre>
+pnpm add @ai-native-solutions/fallsdk</code></pre>
       <h3>browser · esm cdn</h3>
       <pre><code>&lt;script type="module"&gt;
-  import { load } from 'https://sjgant80-hub.github.io/fallsdk/dist/estate.js';
+  import { load } from 'https://sjgant80-hub.github.io/fallsdk/src/index.js';
   const estate = await load();
   console.log(estate.foldkit.KAPPA);
 &lt;/script&gt;</code></pre>
       <h3>deno · bun</h3>
-      <pre><code>import { load } from 'npm:@ai-native-solutions/estate';</code></pre>
+      <pre><code>import { load } from 'npm:@ai-native-solutions/fallsdk';</code></pre>
     </section>
 
     <section id="quickstart">
       <h2>Quick <em>start</em></h2>
       <p>Three-line sovereign identity + peer channel:</p>
-      <pre><code>import { load } from '@ai-native-solutions/estate';
+      <pre><code>import { load } from '@ai-native-solutions/fallsdk';
 
 const estate = await load();
 const me = await estate.fallid.getOrCreate({ label: 'my node' });
@@ -166,7 +166,7 @@ await link.broadcast({ hello: 'estate' });</code></pre>
     <section id="load">
       <h2>estate.<em>load()</em></h2>
       <p>Fetches every library in parallel and returns a single object. Skip the ones you don't need with <code>only</code>.</p>
-      <pre><code>import { load } from '@ai-native-solutions/estate';
+      <pre><code>import { load } from '@ai-native-solutions/fallsdk';
 
 // full estate
 const all = await load();
@@ -193,7 +193,7 @@ const est = await load({ onError: (name, err) =&gt; log(name, err) });</code></p
     <section id="healthcheck">
       <h2>health<em>Check()</em></h2>
       <p>HEAD every library and report status. Useful for a status page or CI probe.</p>
-      <pre><code>import { healthCheck } from '@ai-native-solutions/estate';
+      <pre><code>import { healthCheck } from '@ai-native-solutions/fallsdk';
 const report = await healthCheck();
 // [{ name:'foldkit', url:'…', ok:true, status:200 }, …]</code></pre>
     </section>
@@ -210,7 +210,7 @@ const report = await healthCheck();
     <section id="foldkit" class="lib">
       <div class="head"><h2>foldkit</h2><span class="src">foldkit/foldkit.js</span></div>
       <p class="summary">Fold arithmetic, SPINE, KAPPA/OMEGA constants, six OPS, Konomi band classifier.</p>
-      <pre><code>import { foldkit } from '@ai-native-solutions/estate';
+      <pre><code>import { foldkit } from '@ai-native-solutions/fallsdk';
 const band = foldkit.classifyKappaBand('the signal survives the fall');
 const probe = foldkit.probeFromKappa(band.min, 'hello');</code></pre>
       <div class="api"><table>
@@ -230,7 +230,7 @@ const probe = foldkit.probeFromKappa(band.min, 'hello');</code></pre>
     <section id="foldshim" class="lib">
       <div class="head"><h2>foldshim</h2><span class="src">foldkit/foldshim.js</span></div>
       <p class="summary">Shape adapters — feed legacy state shapes into foldkit without hand-rolling conversion.</p>
-      <pre><code>import { foldshim } from '@ai-native-solutions/estate';
+      <pre><code>import { foldshim } from '@ai-native-solutions/fallsdk';
 const { S } = foldshim.adopt(rawObject, { recipe: 'spine7' });</code></pre>
       <div class="api"><table>
         <tr><th>export</th><th>signature</th></tr>
@@ -244,7 +244,7 @@ const { S } = foldshim.adopt(rawObject, { recipe: 'spine7' });</code></pre>
     <section id="fallid" class="lib">
       <div class="head"><h2>fallid</h2><span class="src">fallid/fallid.js</span></div>
       <p class="summary">Sovereign identity — Ed25519 keypair in IndexedDB, DID strings, sign & verify.</p>
-      <pre><code>import { fallid } from '@ai-native-solutions/estate';
+      <pre><code>import { fallid } from '@ai-native-solutions/fallsdk';
 const me  = await fallid.getOrCreate({ label: 'my node' });
 const sig = await fallid.sign('hello', me);
 const ok  = await fallid.verify('hello', sig, me.publicKey);</code></pre>
