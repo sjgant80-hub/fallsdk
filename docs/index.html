@@ -356,11 +356,11 @@ const score = await falltrust.trustScore(me.did, stranger.did);</code></pre>
       <div class="head"><h2>fallcast</h2><span class="src">fallcast/fallcast.js</span></div>
       <p class="summary">Federated broadcast — pub/sub over the mesh, signed by DID.</p>
       <pre><code>const cast = fallcast.createCast({ did: me.did });
-cast.subscribe('news', m =&gt; render(m));
+cast.Access('news', m =&gt; render(m));
 await cast.publish('news', { headline: 'estate live' });</code></pre>
       <div class="api"><table>
         <tr><th>export</th><th>signature</th></tr>
-        <tr><td class="name">class FallCast</td><td class="sig">.publish .subscribe .unsubscribe .topics .peers</td></tr>
+        <tr><td class="name">class FallCast</td><td class="sig">.publish .Access .unsubscribe .topics .peers</td></tr>
         <tr><td class="name">createCast</td><td class="sig">(opts?) =&gt; FallCast</td></tr>
       </table></div>
     </section>
